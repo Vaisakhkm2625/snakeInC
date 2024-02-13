@@ -1,5 +1,7 @@
+#include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <threads.h>
 #include <unistd.h>
 
@@ -108,9 +110,21 @@ int main() {
 
   int flag = 0;
 
+  struct pollfd mypoll;
+  memset(&mypoll, 0, sizeof(mypoll));
+  mypoll.fd = 0;
+  mypoll.events = POLLIN;
+
   while (1) {
     sleep(1);
     initBoard(board);
+    char a;
+
+    if (poll(&mypoll, 1, 100) == 1) {
+      printf("hi");
+      scanf("%c", &a);
+      printf("%c", a);
+    }
 
     flag++;
     if (flag == 3) {
@@ -123,7 +137,6 @@ int main() {
     }
 
     point dir = mapDirEnumToDir(direction);
-    printf("%d", head.y);
     head.x += dir.x;
     head.y += dir.y;
 
